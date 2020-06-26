@@ -38,16 +38,4 @@ def typset_tex_file(latex_file, latex_dir):
 	os.chdir(latex_dir)
 	os.system(f"pdflatex {latex_file}")
 
-
-
-# x = choose_dir()
-# print(os.path.join(x,"/latex"))
-
-# x, y, z = setup_dir()
-
-# print(x)
-
-# print(y)
-
-
-# print(z)
+	

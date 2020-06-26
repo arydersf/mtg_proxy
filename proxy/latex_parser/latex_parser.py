@@ -6,9 +6,6 @@ def get_image_paths_for_latex(images_dir, deck_list):
     cards_paths_latex = []
     image_paths = os.listdir(images_dir)
 
-    print(images_dir)
-    print(image_paths)
-
     for card in deck_list:
         path = card[1].replace(" ","-").lower()
         r = re.compile(f".*{path}.*")
