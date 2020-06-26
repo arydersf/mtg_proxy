@@ -7,6 +7,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 import system_handler.system_handler
+import data.data_loader
  
 
 
@@ -208,21 +209,15 @@ def pipeline2():
     print("Directy is ready")
 
 
-
-
-
-    deck_list = load_decklist(root_dir)
+    deck_list = data.data_loader.load_decklist(root_dir)
 
     print("Loading JSON card data ... ")
 
-    JSON_path = "/Users/ARyder/Documents/Project/MTG_coding/dataFile/orace-cards.json"
-
-    card_df = load_card_JSON(JSON_path)
-
-    
-    # card_df = pd.read_json(JSON_path)
+    card_df = data.data_loader.load_card_data()
 
     print("All Files Uploaded")
+
+    
 
     print("making LaTeX document...")
 

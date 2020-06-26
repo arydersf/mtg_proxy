@@ -2,14 +2,15 @@ import os
 import re
 import pandas as pd
 
-def read_deckList():
+def load_decklist(proxy_folder):
     card_list = []
     
-    txt_files = [f for f in os.listdir('.') if f.endswith('.txt')]
+    txt_files = [f for f in os.listdir(proxy_folder) if f.endswith('.txt')]
+    
     if len(txt_files) != 1:
         raise ValueError('should be only one txt file in the current directory')
     
-    cards = open(txt_files[0]).readlines()
+    cards = open(os.path.join(proxy_folder, txt_files[0])).readlines()
     
     for card in cards:
         name = card[2:-1]
@@ -20,7 +21,8 @@ def read_deckList():
     return(card_list)
 
 
-def get_paths(images_dir, deck_list):
+def get_image_paths(images_dir, deck_list):
+    ## The .tex file needs the path of all the images it will use  
     cards_paths_latex = []
     image_paths = os.listdir(images_dir)
 
@@ -41,7 +43,6 @@ def get_paths(images_dir, deck_list):
 def pull_image(deck_list, card_df, save_path):
     
     for card in enumerate(deck_list):
-        #print(card[1][1])
         specific_card = card_df[card_df["name"] == card[1][1]]["image_uris"]
         
         if specific_card.tolist():
@@ -68,7 +69,37 @@ def pull_image(deck_list, card_df, save_path):
 
 
 def load_card_data():
-	JSON_path = "orace-cards.json"
-	card_df = pd.read_json(JSON_path)
+    ## method called from app, recouses sub dir is in the same folder as where its called. 
+    recources_path = "recources/"
 
-	return card_df
+    ## If no card file, download from interent: FIX!! ###
+    JSON_file = "orace-cards.json"
+
+    path_ = os.path.join(recources_path, JSON_file)
+
+    print(path_)
+
+    card_df = pd.read_json(path_)
+
+    return card_df
+
+
+test_proxy_folder = "/Users/ARyder/Desktop/Tester/"
+# test_image_dir = "/Users/ARyder/Desktop/Tester/images/"
+# test_deck_list = open("/Users/ARyder/Desktop/Tester/Deck - Eldrazi Tron.txt", "r")
+# test_card_df =  pd.read_json("/Users/ARyder/Documents/Project/MTG_coding/dataFile/orace-cards.json")
+# test_save_path = 
+recources_path = "../recources/"
+
+    ## If no card file, download from interent: FIX!! ###
+JSON_file = "orace-cards.json"
+
+
+#card_df = pd.read_json(os.path.join(recources_path, JSON_file))
+
+
+
+#card_df = load_card_data()
+
+
+#print(card_df.head())
