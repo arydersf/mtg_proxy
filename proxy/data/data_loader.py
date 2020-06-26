@@ -1,6 +1,8 @@
 import os 
 import re
 import pandas as pd
+import urllib
+import requests
 
 def load_decklist(proxy_folder):
     card_list = []
@@ -40,7 +42,7 @@ def get_image_paths(images_dir, deck_list):
     return cards_paths_latex
 
 
-def pull_image(deck_list, card_df, save_path):
+def populate_image_dir2(deck_list, card_df, save_path):
     
     for card in enumerate(deck_list):
         specific_card = card_df[card_df["name"] == card[1][1]]["image_uris"]
@@ -77,22 +79,59 @@ def load_card_data():
 
     path_ = os.path.join(recources_path, JSON_file)
 
-    print(path_)
-
     card_df = pd.read_json(path_)
 
     return card_df
 
 
-test_proxy_folder = "/Users/ARyder/Desktop/Tester/"
+def populate_image_dir(deck_list, card_df, save_path):
+
+    for card in deck_list:
+        target_card = card_df[card_df["name"] == card[1]]
+
+        target_png_url = target_card['image_uris'].values[0]['png']
+
+        if target_png_url:
+            downloaded_obj = requests.get(target_png_url)
+
+            #LaTex doesn't like space in names, so changing file names to dashes
+            file_name = card[1].replace(" ","-").lower()+".png"
+
+            with open(os.path.join(save_path, file_name), "wb") as file:
+                file.write(downloaded_obj.content)
+
+        else:
+            print(f"Cannot find {card[1][1]}") 
+
+
+
+
+
+
+
+
+# test_proxy_folder = "/Users/ARyder/Desktop/Tester/"
 # test_image_dir = "/Users/ARyder/Desktop/Tester/images/"
-# test_deck_list = open("/Users/ARyder/Desktop/Tester/Deck - Eldrazi Tron.txt", "r")
-# test_card_df =  pd.read_json("/Users/ARyder/Documents/Project/MTG_coding/dataFile/orace-cards.json")
-# test_save_path = 
-recources_path = "../recources/"
+# test_deck_list = load_decklist(test_proxy_folder)
+test_card_df =  pd.read_json("/Users/ARyder/Documents/Project/MTG_coding/dataFile/orace-cards.json")
+
+
+
+
+target_card = test_card_df[test_card_df["name"] == "Cling to Dust"]
+target_image = target_card["image_uris"].values[0]['png']
+
+print(target_image)
+
+# print(target_image[0]['png'])
+
+
+
+
+
 
     ## If no card file, download from interent: FIX!! ###
-JSON_file = "orace-cards.json"
+#JSON_file = "orace-cards.json"
 
 
 #card_df = pd.read_json(os.path.join(recources_path, JSON_file))

@@ -8,6 +8,7 @@ from tkinter import filedialog
 
 import system_handler.system_handler
 import data.data_loader
+import latex_parser.latex_parser
  
 
 
@@ -205,29 +206,25 @@ def pipeline():
 
 
 def pipeline2():
+    print("Setting up directory ...  \n")
     root_dir, image_dir, latex_dir = system_handler.system_handler.setup_dir()
-    print("Directy is ready")
 
-
+    print("Loading files ... \n")
     deck_list = data.data_loader.load_decklist(root_dir)
-
-    print("Loading JSON card data ... ")
-
     card_df = data.data_loader.load_card_data()
+    data.data_loader.populate_image_dir(deck_list, card_df,image_dir)
 
-    print("All Files Uploaded")
 
-    
 
-    print("making LaTeX document...")
+    print("Formatting LaTeX document...\n")
+    #cards_paths = latex_parser.latex_parser.get_image_paths_for_latex(image_dir, deck_list)
+    #print("got paths")
+    latex_parser.latex_parser.make_latex_tex_file(image_dir, deck_list, latex_dir)
 
-    pull_image(deck_list, card_df, image_dir)
-
-    make_pdf(image_dir, deck_list, latex_dir)
-
-    system_handler.system_handler.typset_tex_file("cards_for_print.tex", latex_dir)
-
+    #system_handler.system_handler.typset_tex_file("cards_for_print.tex", latex_dir)
     print("YAY! The latex document is made")
+
+
 
 #pipeline("/Users/ARyder/Documents/MTG/Modern/2020/2020_06_12/Tron")
 

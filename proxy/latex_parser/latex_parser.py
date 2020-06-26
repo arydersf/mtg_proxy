@@ -1,8 +1,13 @@
 import re
+import os 
+
 
 def get_image_paths_for_latex(images_dir, deck_list):
     cards_paths_latex = []
     image_paths = os.listdir(images_dir)
+
+    print(images_dir)
+    print(image_paths)
 
     for card in deck_list:
         path = card[1].replace(" ","-").lower()
@@ -58,9 +63,9 @@ def make_latex_tex_file(image_folder, deck_list, pdf_folder):
     
     file_name = "cards_for_print.tex"
     
-    cards_paths = get_paths(image_folder, deck_list)
+    cards_paths = get_image_paths_for_latex(image_folder, deck_list)
     
-    card_table = make_card_table(cards_paths)
+    card_table = make_latex_card_table(cards_paths)
     
     preamble = '''
     \\documentclass{article}
@@ -94,7 +99,6 @@ def make_latex_tex_file(image_folder, deck_list, pdf_folder):
 
     f.write(ending)
     f.close()
-
 
 def typset_tex_file(latex_file):
     os.system(f"pdflatex {latex_file}")
