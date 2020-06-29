@@ -2,6 +2,7 @@ import re
 import os 
 
 
+
 def get_image_paths_for_latex(images_dir, deck_list):
     cards_paths_latex = []
     image_paths = os.listdir(images_dir)

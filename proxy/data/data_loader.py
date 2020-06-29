@@ -42,37 +42,10 @@ def get_image_paths(images_dir, deck_list):
     return cards_paths_latex
 
 
-def populate_image_dir2(deck_list, card_df, save_path):
-    
-    for card in enumerate(deck_list):
-        specific_card = card_df[card_df["name"] == card[1][1]]["image_uris"]
-        
-        if specific_card.tolist():
-            for obj in specific_card:
-                test_str = str(obj)
-
-            matched_url = re.search("'png': '(.+?)', 'art_crop':", test_str)
-
-            if matched_url:
-                found_url = matched_url.group(1)
-                 
-                
-            downloaded_obj = requests.get(found_url)
-            
-            #LaTex doesn't like space in names, so changing file names to dashes
-            file_name = card[1][1].replace(" ","-").lower()+".png"
-
-            with open(os.path.join(save_path, file_name), "wb") as file:
-                file.write(downloaded_obj.content)
-
-
-        else:
-            print(f"Cannot find {card[1][1]}")
-
-
-def load_card_data():
+def load_card_data(git_dir):
+    #data_path = os.path.join(os.getcwd(),
     ## method called from app, recouses sub dir is in the same folder as where its called. 
-    recources_path = "recources/"
+    recources_path = os.path.join(git_dir, "proxy/", "recources/")
 
     ## If no card file, download from interent: FIX!! ###
     JSON_file = "orace-cards.json"
