@@ -43,16 +43,31 @@ def get_image_paths(images_dir, deck_list):
 
 
 def load_card_data(git_dir):
-    #data_path = os.path.join(os.getcwd(),
     ## method called from app, recouses sub dir is in the same folder as where its called. 
     recources_path = os.path.join(git_dir, "proxy/", "recources/")
 
-    ## If no card file, download from interent: FIX!! ###
+    ## I decided to only download the card.json file once. This could be upgraded to be called if a card isnt found, etc. 
     JSON_file = "orace-cards.json"
 
-    path_ = os.path.join(recources_path, JSON_file)
+    if os.path.exists(os.path.join(recources_path, JSON_file)):
+        print("alread exists")
+        card_df = pd.read_json(os.path.join(recources_path, JSON_file))
 
-    card_df = pd.read_json(path_)
+    else:
+        bulkData_url = "https://api.scryfall.com/bulk-data"
+
+        download_obj_bulk_data = requests.get(bulkData_url)
+
+        download_df = pd.read_json(download_obj_bulk_data.content)
+
+        json_download_uri = download_df["data"][0]["download_uri"]
+
+        download_obj_card_df = requests.get(json_download_uri)
+
+        with open(os.path.join(recources_path, JSON_file) , "wb") as file:
+            file.write(download_obj_card_df.content)
+
+        card_df = pd.read_json(os.path.join(recources_path, JSON_file))
 
     return card_df
 
