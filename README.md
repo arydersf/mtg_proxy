@@ -1,7 +1,7 @@
 
 # Magic the Gathering Card Proxy 
 
-Proxy is a program lets the user format a MTG card proxy from a deck list by taking .txt decklist file and makes a .tex file.
+Proxy is a program lets the user format a MTG card proxy from a deck list by taking .txt decklist file and makes a .tex file.  All proxy images come from [Scyfall](https://scryfall.com/).
 
 
 ## Installation
@@ -12,7 +12,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install require
 pip install -r requirements.txt
 ```
 
-NOTE: a LaTEX typsetter is NOT INCLUDED here. You can either download a LaTEX editor or use online tools such as [Overleaf](https://www.overleaf.com/)
+NOTE: a LaTEX typsetter is NOT INCLUDED here. You can either download a LaTEX editor or use online tools such as [Overleaf](https://www.overleaf.com/).
 
 ## Usage
 
