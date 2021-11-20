@@ -3,6 +3,7 @@ import re
 import pandas as pd
 import urllib
 import requests
+import time
 
 def load_decklist(proxy_folder):
     card_list = []
@@ -90,4 +91,78 @@ def populate_image_dir(deck_list, card_df, save_path):
 
         else:
             print(f"Cannot find {card[1][1]}") 
+
+
+def build_cardDict(file_path):
+
+    ##Take a decklist with format: {card quantiy} {card name}\n ... 
+
+
+    #Format Cards
+    card_array = []
+
+    cards = open(file_path).readlines()
+    
+    for card in cards:
+        single_card = card.strip('\n').split(" ", 1)## Assume a 'space' seperates qnty and card_name
+
+        if len(single_card) == 2: 
+            card_qnty = int(single_card[0])
+            card_name = single_card[1]
+            card_array.append([card_qnty, card_name])
+
+    ##Create diction
+    file_dir = file_path.rsplit("/", 1)[0]
+    card_dict = {
+        "file_path": file_path,
+        "file_dir": file_dir,
+        "card_info": card_array,
+        "image_dir": os.path.join(file_dir, "images"),
+        "latex_dir": os.path.join(file_dir, "latex") 
+            }
+
+    return(card_dict)
+
+
+def download_pngFiles(target_dir, card_list):
+    '''summary
+    Downloads the card png files from the scryfall database
+    '''
+
+
+    card_pngs = []
+    ##Get PNG File links and download png fies tot
+    for card in card_list:
+        
+        r_fullData = requests.get(f"https://api.scryfall.com/cards/named?exact={card[1]}")
+
+        if r_fullData.status_code == 200:
+
+            card_allData = r_fullData.json()
+
+            ##download png files to target_dir
+            r_png = requests.get(card_allData["image_uris"]["png"])
+
+            file_name = card[1].replace(" ","-").lower()+".png"
+       
+            with open(os.path.join(target_dir, "images", file_name), "wb") as file:
+                file.write(r_png.content)
+
+        else:
+            print(f"Card cannot be found: {card[1]}")
+
+        time.sleep(0.1) ##per Scryfall community guidlines
+
+
+
+##build_cardDict test:
+test_path = "/Users/ARyder/Documents/Projects/mtg_proxy/proxy/recources/example/Deck - Eldrazi Tron.txt"
+xx = build_cardDict(test_path)
+print(xx)
+
+
+##download_png test:
+#test_dir='/Users/ARyder/Desktop/tt'
+#test_cardList= [[12, 'All Is Dust'], [1, 'Blast Zone'], [1, 'Cavern of Souls']]
+#download_pngFiles(test_dir, test_cardList)
 
