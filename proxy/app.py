@@ -1,6 +1,6 @@
-from system_handler import system_handler
-from latex import latex_parser
-from data import data_loader
+from .system_handler import system_handler
+from .latex import latex_parser
+from .data import data_loader
 
 import os
 import test
@@ -41,11 +41,11 @@ def run():
 
 
     #5. Build latex document 
-    latex_parser.make_latex_tex_file(decklist_dic["image_dir"], decklist_dic["card_info"], decklist_dic["latex_dir"])
+    latex_file = latex_parser.make_latex_tex_file(decklist_dic["image_dir"], decklist_dic["card_info"], decklist_dic["latex_dir"])
     logger.info(f"Created .tex file")
 
     #6. Typset latex document
-    #latex.make_png(decklist_df)
+    latex_parser.compile_tex(latex_file, decklist_dic["file_dir"])
 
 
     #7. Clean up

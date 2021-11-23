@@ -79,10 +79,10 @@ def make_latex_tex_file(image_folder, deck_list, pdf_folder):
     \\addtolength{\\tabcolsep}{0.5pt} 
     \\def\\arraystretch{0.5} 
 
-    \\graphicspath{{../images/}}
 
 
         '''
+    graphics = f"\\graphicspath{{{{{image_folder}/}}}}\n"
 
     ending = "\\end{document}"
     
@@ -93,6 +93,7 @@ def make_latex_tex_file(image_folder, deck_list, pdf_folder):
 
     f = open(os.path.join(pdf_folder, file_name), "x")
     f.write(preamble)
+    f.write(graphics)
 
     for listitem in card_table:
         f.write('%s\n' % listitem)
@@ -100,8 +101,34 @@ def make_latex_tex_file(image_folder, deck_list, pdf_folder):
     f.write(ending)
     f.close()
 
-def typset_tex_file(latex_file):
-    os.system(f"pdflatex {latex_file}")
+    return os.path.join(pdf_folder, file_name)
 
+def compile_tex(latex_file, target_dir):
+    '''Compiles a latex_file document and places resulting .pdf file into the target directory'''
+
+    file_dir = latex_file.rsplit("/", 1)[0]
+
+    file_name = latex_file.rsplit("/", 1)[1][:-4]
+
+    #compile
+    if os.path.exists(latex_file):
+        os.system(f"pdflatex -interaction=nonstop -output-directory={file_dir} {latex_file}")
+
+    #move
+    pdf_file = f"{file_dir}/{file_name}.pdf"
+    if os.path.exists(pdf_file):
+        os.system(f"mv {pdf_file} {target_dir}/{file_name}.pdf")
+
+
+
+
+
+
+#pdflatex -interaction=nonstop -output-directory=/Users/ARyder/Desktop/tt/latex pdf /Users/ARyder/Desktop/tt/latex/cards_for_print.tex
+
+
+
+#file = "/Users/ARyder/Desktop/tt/latex/cards_for_print.tex"
+#compile_tex(file, "/Users/ARyder/Desktop/tt")
 
 

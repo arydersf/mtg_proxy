@@ -4,10 +4,8 @@ import tkinter as tk
 from tkinter import filedialog
 import logging
 
-#logger = logging.getLogger("app")
+
 logger = logging.getLogger()
-
-
 
 def choose_dir():
 	root = tk.Tk()
@@ -17,6 +15,7 @@ def choose_dir():
 
 	return(file_path)
 
+
 def choose_file():
     root = tk.Tk()
     root.withdraw()
@@ -24,6 +23,7 @@ def choose_file():
     file_path = filedialog.askopenfilename()
 
     return(file_path)
+
 
 def make_dir(root_dir, dir_name):
     folder_dir = os.path.join(root_dir, dir_name)
@@ -66,11 +66,15 @@ def clean_up(file_dir):
         pass
 
 
-
-
 def test():
     #print("Statement from system handeler")
     #logger.warning("System handler --  logger")
     logging.warning("System handler -- logging")
 
 
+
+graphics = f"\\graphicspath{{{{{image_folder[:-1]}}}}}"
+
+
+image_folder="xx"
+print(f"\\graphicspath{{{image_folder}}}")

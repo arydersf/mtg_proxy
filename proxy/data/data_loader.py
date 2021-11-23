@@ -100,8 +100,6 @@ def build_cardDict(file_path):
 
     ##Take a decklist with format: {card quantiy} {card name}\n ... 
 
-    logger.info("TEST")
-
     #Format Cards
     card_array = []
 
@@ -132,7 +130,6 @@ def download_pngFiles(target_dir, card_list):
     '''summary
     Downloads the card png files from the scryfall database
     '''
-
 
     card_pngs = []
     ##Get PNG File links and download png fies tot
