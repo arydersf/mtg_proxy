@@ -1,34 +1,59 @@
-from .system_handler import system_handler
-from .data import data_loader
-from .latex import latex_parser
+from system_handler import system_handler
+from latex import latex_parser
+from data import data_loader
+
 import os
+import test
+import logging
+
+##Logging configuration
+logger = logging.getLogger()
+logger.setLevel(level = logging.INFO)
+
+stream = logging.StreamHandler()
+streamformat = logging.Formatter("[%(asctime)s]: [%(levelname)s]: [%(module)s]: %(message)s")
+stream.setFormatter(streamformat)
+stream.setLevel(logging.INFO)
+
+logger.addHandler(stream)
+
 
 def run():
     
-    #1. Find desired decklist
+    #1. Get decklist filepath
+    logger.info("Started Application")
     decklist_file = system_handler.choose_file()
+    logger.info(f"Loaded desklist: %s", decklist_file)
 
 
-    #Parse file --> decklist_df: [[decklist directory],[[qnty, cardName_1],[qnty, cardName_2], ...]] 
+    #2. Load decklist contents
     decklist_dic = data_loader.build_cardDict(decklist_file)
 
 
-    #Create sub directories
+    #3. Create directory structure
     system_handler.setup_dir(decklist_dic["file_dir"])
+    logger.info(f"Made subdirecotires: %s, and %s", decklist_dic["image_dir"], decklist_dic["latex_dir"])
 
 
-    #Download png images from decklist_dict and place in appropriate directory (imageDirectory)
+    #4. Download png images from decklist_dict and place in appropriate directory (imageDirectory)
     data_loader.download_pngFiles(decklist_dic["file_dir"], decklist_dic["card_info"])
+    logger.info(f"Downloaded all the image files to: %s", decklist_dic["file_dir"])
 
 
-    #3. Build df for latex document. {quantity, png file path}
+    #5. Build latex document 
     latex_parser.make_latex_tex_file(decklist_dic["image_dir"], decklist_dic["card_info"], decklist_dic["latex_dir"])
+    logger.info(f"Created .tex file")
 
-    #5. Run latex document
+    #6. Typset latex document
     #latex.make_png(decklist_df)
 
 
+    #7. Clean up
+    system_handler.clean_up(decklist_dic["file_dir"])
+    logger.info(f"Deleted subdirecotires:")
 
-    #system_handler.system_handler.typset_tex_file("cards_for_print.tex", latex_dir)
-    print("YAY! The latex document is made")
+    logger.info("Finished Application")
+
+
+
 

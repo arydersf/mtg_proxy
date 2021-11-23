@@ -2,7 +2,10 @@ import os
 import shutil
 import tkinter as tk
 from tkinter import filedialog
+import logging
 
+#logger = logging.getLogger("app")
+logger = logging.getLogger()
 
 
 
@@ -37,7 +40,7 @@ def setup_dir(file_dir):
         -latex : where the latex document will created
         -images : where the card image files will be stored
     '''
-    
+
     pdf_folder  = "./latex"
     image_folder    = "./images"
 
@@ -45,10 +48,29 @@ def setup_dir(file_dir):
     make_dir(file_dir, image_folder)
 
 
-
 def typset_tex_file(latex_file, latex_dir):
 	os.chdir(latex_dir)
 	os.system(f"pdflatex {latex_file}")
 
+
+def clean_up(file_dir):
+    """Delets al directories and files created by program that are not the final pdf"""
+
+    image_dir = os.path.join(file_dir, "images")
+    if os.path.exists(image_dir):
+        shutil.rmtree(image_dir)
+
+    latex_dir = os.path.join(file_dir, "latex")
+    if os.path.exists(latex_dir):
+        #shutil.rmtree(latex_dir)
+        pass
+
+
+
+
+def test():
+    #print("Statement from system handeler")
+    #logger.warning("System handler --  logger")
+    logging.warning("System handler -- logging")
 
 

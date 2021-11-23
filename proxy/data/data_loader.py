@@ -4,6 +4,9 @@ import pandas as pd
 import urllib
 import requests
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 def load_decklist(proxy_folder):
     card_list = []
@@ -97,6 +100,7 @@ def build_cardDict(file_path):
 
     ##Take a decklist with format: {card quantiy} {card name}\n ... 
 
+    logger.info("TEST")
 
     #Format Cards
     card_array = []
@@ -149,16 +153,16 @@ def download_pngFiles(target_dir, card_list):
                 file.write(r_png.content)
 
         else:
-            print(f"Card cannot be found: {card[1]}")
+            logger.warning(f"Card cannot be found: {card[1]}. Will not be included in final pdf.")
 
         time.sleep(0.1) ##per Scryfall community guidlines
 
 
 
-##build_cardDict test:
-test_path = "/Users/ARyder/Documents/Projects/mtg_proxy/proxy/recources/example/Deck - Eldrazi Tron.txt"
-xx = build_cardDict(test_path)
-print(xx)
+#build_cardDict test:
+#test_path = "/Users/ARyder/Documents/Projects/mtg_proxy/proxy/recources/example/Deck - Eldrazi Tron.txt"
+#xx = build_cardDict(test_path)
+#print(xx)
 
 
 ##download_png test:

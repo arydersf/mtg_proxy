@@ -1,5 +1,7 @@
 import re
 import os 
+import logging
+
 
 
 
@@ -16,7 +18,7 @@ def get_image_paths_for_latex(images_dir, deck_list):
             for i in range(card[0]):
                 cards_paths_latex.append(path)
         else:
-            print(f"Unable to find {card[1]}")
+            logging.warn(f"Unable to find {card[1]}")
             
     return cards_paths_latex
 
