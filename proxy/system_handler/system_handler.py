@@ -70,11 +70,3 @@ def test():
     #print("Statement from system handeler")
     #logger.warning("System handler --  logger")
     logging.warning("System handler -- logging")
-
-
-
-graphics = f"\\graphicspath{{{{{image_folder[:-1]}}}}}"
-
-
-image_folder="xx"
-print(f"\\graphicspath{{{image_folder}}}")
