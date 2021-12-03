@@ -120,20 +120,22 @@ def run2():
     data_loader.download_pngFiles(decklist.file_dir, decklist.card_info)
     logger.info(f"Downloaded all the .png files to: %s", decklist.file_dir)
 
+    #5. Build laTEX document 
+    decklist.make_latex()
+    logger.info(f"Created the laTEX string")
 
-    # #5. Build latex document 
-    # latex_file = latex_parser.make_latex_tex_file(decklist_dic["image_dir"], decklist_dic["card_info"], decklist_dic["latex_dir"])
-    # logger.info(f"Created .tex file")
+    system_handler.make_file(decklist.latex_dir, decklist.latex_docName, decklist.latex_docString)
+    logger.info(f"Made laTEX file")
 
-    # #6. Typset latex document
-    # latex_parser.compile_tex(latex_file, decklist_dic["file_dir"])
+    #6. Compile laTEX document
+    system_handler.compile_latex(decklist.latex_file, decklist.file_dir)
 
 
-    # #7. Clean up
-    # system_handler.clean_up(decklist_dic["file_dir"])
-    # logger.info(f"Deleted subdirecotires:")
+    #7. Clean up
+    system_handler.clean_up(decklist.file_dir)
+    logger.info(f"Deleted subdirecotires:")
 
-    # logger.info("Finished Application")
+    logger.info("Finished Application")
 
 run2()
 

@@ -127,43 +127,25 @@ def build_cardDict(file_path):
 
 
 def download_pngFiles(target_dir, card_list):
-    '''summary
-    Downloads the card png files from the scryfall database
-    '''
+    '''Downloads card png files from the scryfall database'''
 
     card_pngs = []
-    ##Get PNG File links and download png fies tot
-    for card in card_list:
-        
+
+    for card in card_list:        
         r_fullData = requests.get(f"https://api.scryfall.com/cards/named?exact={card[1]}")
 
         if r_fullData.status_code == 200:
-
             card_allData = r_fullData.json()
 
-            ##download png files to target_dir
             r_png = requests.get(card_allData["image_uris"]["png"])
 
             file_name = card[1].replace(" ","-").lower()+".png"
        
             with open(os.path.join(target_dir, "images", file_name), "wb") as file:
+                logger.debug("Download %s", file_name)
                 file.write(r_png.content)
 
         else:
             logger.warning(f"Card cannot be found: {card[1]}. Will not be included in final pdf.")
 
         time.sleep(0.1) ##per Scryfall community guidlines
-
-
-
-#build_cardDict test:
-#test_path = "/Users/ARyder/Documents/Projects/mtg_proxy/proxy/recources/example/Deck - Eldrazi Tron.txt"
-#xx = build_cardDict(test_path)
-#print(xx)
-
-
-##download_png test:
-#test_dir='/Users/ARyder/Desktop/tt'
-#test_cardList= [[12, 'All Is Dust'], [1, 'Blast Zone'], [1, 'Cavern of Souls']]
-#download_pngFiles(test_dir, test_cardList)
-

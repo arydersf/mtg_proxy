@@ -3,6 +3,16 @@ import os
 import logging
 
 
+class Latex:
+    '''Class to handle all LaTEX functions'''
+
+    def __init__(self, name): 
+        self.name = name
+
+    
+
+
+
 
 
 def get_image_paths_for_latex(images_dir, deck_list):
