@@ -5,7 +5,7 @@ from tkinter import filedialog
 import logging
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 def choose_dir():
     """Opens a file chooser and returns selected directory"""
@@ -93,6 +93,4 @@ def clean_up(file_dir):
 
     latex_dir = os.path.join(file_dir, "latex")
     if os.path.exists(latex_dir):
-        #shutil.rmtree(latex_dir)
-        pass
-
+        shutil.rmtree(latex_dir)
