@@ -3,73 +3,10 @@ import re
 import pandas as pd
 import urllib
 import requests
+import time
+import logging
 
-def load_decklist(proxy_folder):
-    card_list = []
-    
-    txt_files = [f for f in os.listdir(proxy_folder) if f.endswith('.txt')]
-    
-    if len(txt_files) != 1:
-        raise ValueError('should be only one txt file in the current directory')
-    
-    cards = open(os.path.join(proxy_folder, txt_files[0])).readlines()
-    
-    for card in cards:
-        name = card[2:-1]
-        if name != "":
-            qnty = int(card[0])
-            card_list.append([qnty, name])
-    
-    return(card_list)
-
-
-def get_image_paths(images_dir, deck_list):
-    ## The .tex file needs the path of all the images it will use  
-    cards_paths_latex = []
-    image_paths = os.listdir(images_dir)
-
-    for card in deck_list:
-        path = card[1].replace(" ","-").lower()
-        r = re.compile(f".*{path}.*")
-        path = list(filter(r.match, image_paths)) 
-
-        if path:
-            for i in range(card[0]):
-                cards_paths_latex.append(path)
-        else:
-            print(f"Unable to find {card[1]}")
-            
-    return cards_paths_latex
-
-
-def load_card_data(git_dir):
-    ## method called from app, recouses sub dir is in the same folder as where its called. 
-    recources_path = os.path.join(git_dir, "proxy/", "recources/")
-
-    ## I decided to only download the card.json file once. This could be upgraded to be called if a card isnt found, etc. 
-    JSON_file = "orace-cards.json"
-
-    if os.path.exists(os.path.join(recources_path, JSON_file)):
-        print("alread exists")
-        card_df = pd.read_json(os.path.join(recources_path, JSON_file))
-
-    else:
-        bulkData_url = "https://api.scryfall.com/bulk-data"
-
-        download_obj_bulk_data = requests.get(bulkData_url)
-
-        download_df = pd.read_json(download_obj_bulk_data.content)
-
-        json_download_uri = download_df["data"][0]["download_uri"]
-
-        download_obj_card_df = requests.get(json_download_uri)
-
-        with open(os.path.join(recources_path, JSON_file) , "wb") as file:
-            file.write(download_obj_card_df.content)
-
-        card_df = pd.read_json(os.path.join(recources_path, JSON_file))
-
-    return card_df
+logger = logging.getLogger(__name__)
 
 
 def populate_image_dir(deck_list, card_df, save_path):
@@ -91,3 +28,27 @@ def populate_image_dir(deck_list, card_df, save_path):
         else:
             print(f"Cannot find {card[1][1]}") 
 
+
+def download_pngFiles(target_dir, card_list):
+    '''Downloads card png files from the scryfall database'''
+
+    card_pngs = []
+
+    for card in card_list:        
+        r_fullData = requests.get(f"https://api.scryfall.com/cards/named?exact={card[1]}")
+
+        if r_fullData.status_code == 200:
+            card_allData = r_fullData.json()
+
+            r_png = requests.get(card_allData["image_uris"]["png"])
+
+            file_name = card[1].replace(" ","-").lower()+".png"
+       
+            with open(os.path.join(target_dir, "images", file_name), "wb") as file:
+                logger.debug("Download %s", file_name)
+                file.write(r_png.content)
+
+        else:
+            logger.warning(f"Card cannot be found: {card[1]}. Will not be included in final pdf.")
+
+        time.sleep(0.1) ##per Scryfall community guidlines

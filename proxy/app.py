@@ -1,25 +1,63 @@
-from .system_handler import system_handler
-from .data import data_loader
-from .latex_parser import latex_parser
+from proxy.system_handler import system_handler
+from proxy.data import data_loader
+from proxy.Decklist import Decklist
+
 import os
- 
+import test
+import logging
+
+##Logging configuration
+logger = logging.getLogger()
+logger.setLevel(level = logging.INFO)
+
+stream = logging.StreamHandler()
+streamformat = logging.Formatter("[%(asctime)s]: [%(levelname)s]: [%(module)s]: %(message)s")
+stream.setFormatter(streamformat)
+stream.setLevel(logging.INFO)
+
+logger.addHandler(stream)
+
 
 def run():
-    print("Setting up directory ...  \n")
-    root_dir, image_dir, latex_dir = system_handler.setup_dir()
-    #root_dir, image_dir, latex_dir = setup_dir()
+
+    #1. Get decklist filepath
+    logger.info("Started Application")
+    decklist_file = system_handler.choose_file()
+    logger.info(f"Loaded desklist: %s", decklist_file)
 
 
-    print("Loading files ... \n")
-    deck_list = data_loader.load_decklist(root_dir)
-    card_df = data_loader.load_card_data(os.getcwd())
-    data_loader.populate_image_dir(deck_list, card_df, image_dir)
+    #2. Load decklist contents
+    decklist = Decklist(decklist_file)
+    decklist.populate_attributes()
 
 
+    #3. Create directory structure
+    system_handler.setup_dir(decklist.file_dir)
+    logger.info(f"Made subdirecotires: %s, and %s", decklist.file_dir, decklist.latex_dir)
 
-    print("Formatting LaTeX document...\n")
-    latex_parser.make_latex_tex_file(image_dir, deck_list, latex_dir)
+
+    #4. Download png images from decklist_dict and place in appropriate directory (imageDirectory)
+    data_loader.download_pngFiles(decklist.file_dir, decklist.card_info)
+    logger.info(f"Downloaded all the .png files to: %s", decklist.file_dir)
 
 
-    #system_handler.system_handler.typset_tex_file("cards_for_print.tex", latex_dir)
-    print("YAY! The latex document is made")
+    #5. Build laTEX document 
+    decklist.make_latex()
+    logger.info(f"Created the laTEX string")
+
+    system_handler.make_file(decklist.latex_dir, decklist.latex_docName, decklist.latex_docString)
+    logger.info(f"Made laTEX file")
+
+
+    #6. Compile laTEX document
+    system_handler.compile_latex(decklist.latex_file, decklist.file_dir)
+
+
+    #7. Clean up
+    system_handler.clean_up(decklist.file_dir)
+    logger.info(f"Deleted subdirecotires:")
+    logger.info("Finished Application")
+
+run()
+
+
