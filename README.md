@@ -12,7 +12,6 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install require
 pip install -r requirements.txt
 ```
 
-NOTE: a LaTEX typsetter is NOT INCLUDED here. You can either download a LaTEX editor or use online tools such as [Overleaf](https://www.overleaf.com/).
 
 ## Usage
 
@@ -23,17 +22,9 @@ Then, in terminal navigate to the proxy code directory and use the bash command,
 python -m proxy 
 ```
 
-The program will then promp have you choose a directory. Make sure the only item in the directory is the decklist file (.txt).  It will then create two subdirectores:
+The program will then promp have you choose a Decklist file.  It will then create a PDF of the decklist cards. 
 
-1. ./images 
-	
-	* One coppy of each card will be placed in here. The file name will be name-of-card.png 
-
-2. ./latex
-
-	* A properly formated .tex file will be generated. It is up to the user to then typset the file.  NOTE: the .tex file will use images stored in the ./image directory. So if you move it, also move the ./images directory.  
-
-
+TODO: Fill in steps for this process. 
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
