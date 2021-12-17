@@ -58,6 +58,5 @@ def run():
     logger.info(f"Deleted subdirecotires:")
     logger.info("Finished Application")
 
-run()
 
 
