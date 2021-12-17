@@ -20,7 +20,7 @@ class Decklist:
 
 
 	def populate_attributes(self):
-		"""Builds out Decklist attributes used in other methods"""
+		"""Method out Decklist attributes used in other methods"""
 
 		card_array = []
 		cards = []
@@ -46,7 +46,7 @@ class Decklist:
 
 
 	def get_image_paths_for_latex(self, images_dir, deck_list):
-		'''Function that returns an array with all the .png file paths that exist in deck_list and can be found in image_dir'''
+		'''Method that returns an array with all the .png file paths that exist in deck_list and can be found in image_dir'''
 
 		cards_paths_latex = []
 		image_paths = os.listdir(images_dir)
@@ -66,7 +66,7 @@ class Decklist:
 
 
 	def make_latex_card_table(self, cards_paths_latex):
-		'''Function to format the 'tabular' for latex'''
+		'''Method to format the 'tabular' for latex'''
 		table_text = []
 		begin_table = "\\begin{tabular}{ccc}"
 		end_table = "\\end{tabular}"

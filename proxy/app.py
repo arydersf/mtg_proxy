@@ -1,6 +1,6 @@
-from system_handler import system_handler
-from data import data_loader
-from Decklist import Decklist
+from proxy.system_handler import system_handler
+from proxy.data import data_loader
+from proxy.Decklist import Decklist
 
 import os
 import test
@@ -39,7 +39,7 @@ def run():
     #4. Download png images from decklist_dict and place in appropriate directory (imageDirectory)
     data_loader.download_pngFiles(decklist.file_dir, decklist.card_info)
     logger.info(f"Downloaded all the .png files to: %s", decklist.file_dir)
-    
+
 
     #5. Build laTEX document 
     decklist.make_latex()

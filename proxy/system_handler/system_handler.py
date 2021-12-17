@@ -68,7 +68,7 @@ def make_file(directory, filename, file_contents):
 
 
 def compile_latex(latex_file, target_dir):
-    '''Compiles a latex_file document and places resulting .pdf file into the target directory'''
+    """Compiles a latex_file document and places resulting .pdf file into the target directory"""
 
     file_dir = latex_file.rsplit("/", 1)[0]
 
